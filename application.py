@@ -15,7 +15,27 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 'Hello World'
+    return 'home'
+
+@app.route('/catalog/<string:category_name>/items')
+def showCategory(category_name):
+    return category_name
+
+@app.route('/catalog/<string:category_name>/<string:item_name>')
+def showItem(category_name, item_name):
+    return category_name + item_name
+
+@app.route('/add', methods=['GET', 'POST'])
+def addItem():
+    return 'additem'
+
+@app.route('/catalog/<string:category_name>/<string:item_name>/edit', methods=['GET', 'POST'])
+def editItem(category_name, item_name):
+    return category_name + item_name
+
+@app.route('/catalog/<string:category_name>/<string:item_name>/delete', methods=['GET', 'POST'])
+def deleteItem(category_name, item_name):
+    return category_name + item_name
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
