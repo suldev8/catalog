@@ -41,20 +41,45 @@ def addItem():
     if request.method == 'GET':
         categories = session.query(Category).all()
         return render_template('addItem.html', categories=categories)
+    if request.method == 'POST':
+        newItem = Item(
+            name=request.form['name'],
+            description=request.form['description'],
+            category_name=request.form['category_name'],
+            user_id=1
+        )
+        session.add(newItem)
+        session.commit()
+        flash("New item sucessfully! added")
+        return redirect(url_for('home'))
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit', methods=['GET', 'POST'])
 def editItem(category_name, item_name):
-    item = session.query(Item).filter_by(category_name=category_name, name=item_name).one()
+    editItem = session.query(Item).filter_by(category_name=category_name, name=item_name).one()
     if request.method == 'GET':
         categories = session.query(Category).all()
-        return render_template('editItem.html', item=item, categories=categories)
-    return category_name + item_name
+        return render_template('editItem.html', item=editItem, categories=categories)
+    if request.method == 'POST':
+        if request.form['name']:
+            editItem.name = request.form['name']
+        if request.form['description']:
+            editItem.description = request.form['description']
+        if request.form['category_name']:
+            editItem.category_name = request.form['category_name']
+        session.add(editItem)
+        session.commit()
+        flash('Item sucessfully edited!')
+        return redirect(url_for('home'))
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete', methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
     if request.method == 'GET':
         return render_template('deleteItem.html', category_name=category_name, item_name=item_name)
-    return category_name + item_name
+    if request.method == 'POST':
+        deleteItem = session.query(Item).filter_by(category_name=category_name, name=item_name).one()
+        session.delete(deleteItem)
+        flash('Item sucessfully deleted!')
+        return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
