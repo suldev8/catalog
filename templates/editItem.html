@@ -8,7 +8,7 @@
         <label style="padding-top: 8px" for="description">Description</label>
         <textarea name="description" maxlength="250" rows="10">{{ item.description }}</textarea>
         <label style="padding-top: 8px" for="category">Category</label>
-        <select name="category">
+        <select name="category_name">
             {% for category in categories %}
                 {% if category.name == item.category_name %}
                     <option value="{{ category.name }}" selected>{{ category.name }}</option>
