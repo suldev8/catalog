@@ -1,4 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -37,7 +38,8 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(80), nullable=False, unique=True)
     description = Column(String(250))
-    category_id = Column(Integer, ForeignKey('category.id'))
+    created = Column(DateTime, server_default=func.now())
+    category_name = Column(String(80), ForeignKey('category.name'))
     category = relationship(Category)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
