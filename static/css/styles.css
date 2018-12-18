@@ -16,6 +16,11 @@ a:hover, a:active {
     text-decoration: underline;
 }
 
+h2 {
+    margin-top: 0px;
+    margin-bottom: default;
+}
+
 .header {
     display: flex;
     justify-content: center;
@@ -50,7 +55,7 @@ a:hover, a:active {
 .content {
     display: flex;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-start;
     grid-template-areas: 'categories categories categories' 'items';
     background-color: white;
     margin: auto;
@@ -64,15 +69,16 @@ a:hover, a:active {
 .categories {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     padding-right: 5%;
     font-family: Arial, Helvetica, sans-serif
 }
 .items {
     display: flex;
     flex-direction: column;
+    align-items: flex-start; 
     border-left: 1px solid;
     border-color: #bbbbbb;
-    padding: 2%;
     padding-left: 5%;
     font-family: Arial, Helvetica, sans-serif
 }
