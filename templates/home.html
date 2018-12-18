@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
+<div class="flash">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</div>
+<div class="lists">
 <div class="categories">
     <h2>Categries</h2>
     {% for category in categories %}
@@ -14,5 +26,6 @@
             <i><span style="color:darkgray">({{item.category_name}})</span></i>
         </a>
     {% endfor %}
+</div>
 </div>
 {% endblock %}
