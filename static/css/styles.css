@@ -1,0 +1,78 @@
+body {
+    background-color:#e6e6e6;
+    margin: 0px 
+}
+a {
+    padding: 2px;
+    text-align: center;
+    font-size: 18px;
+    font-family: Arial, Helvetica, sans-serif
+}
+a:link, a:visited {
+    color: #f86335;
+    text-decoration: none;
+}
+a:hover, a:active {
+    text-decoration: underline;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: black;
+    height: 80px;
+}
+.headerContent {
+    display: flex;
+    justify-content: space-between;
+    width: 73%;
+}
+.title {
+    color: white;
+    font-weight: bold;
+    font-size: 40px;
+    font-family: Arial, Helvetica, sans-serif
+}
+.button {
+    
+    color: white;
+    background-color: #f86335;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    border: none;
+    font-size: 16px;
+    margin: 25px 0px 25px 0px;
+    padding: 0px 30px 0px 30px;
+    cursor: pointer;
+}
+
+.content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    grid-template-areas: 'categories categories categories' 'items';
+    background-color: white;
+    margin: auto;
+    margin-top: 2%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #bbbbbb;
+    padding: 15px;
+    width: 70%;
+}
+.categories {
+    display: flex;
+    flex-direction: column;
+    padding-right: 5%;
+    font-family: Arial, Helvetica, sans-serif
+}
+.items {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid;
+    border-color: #bbbbbb;
+    padding: 2%;
+    padding-left: 5%;
+    font-family: Arial, Helvetica, sans-serif
+}
