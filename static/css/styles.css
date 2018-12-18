@@ -6,8 +6,10 @@ body {
 a {
     padding: 2px;
     text-align: center;
-    font-size: 18px;
-    
+    font-size: 17px;
+}
+p {
+    font-size: 19px;
 }
 a:link, a:visited {
     color: #f86335;
@@ -61,10 +63,6 @@ form {
 }
 
 .content {
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
-    grid-template-areas: 'categories categories categories' 'items';
     background-color: white;
     margin: auto;
     margin-top: 2%;
@@ -74,6 +72,15 @@ form {
     padding: 15px;
     width: 70%;
 }
+.flash {
+    text-align: center;
+}
+.lists {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
 .categories {
     display: flex;
     flex-direction: column;
