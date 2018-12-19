@@ -50,7 +50,7 @@ def addItem():
         )
         session.add(newItem)
         session.commit()
-        flash("New item sucessfully! added")
+        flash("New item sucessfully added!")
         return redirect(url_for('home'))
 
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit', methods=['GET', 'POST'])
@@ -80,6 +80,16 @@ def deleteItem(category_name, item_name):
         session.delete(deleteItem)
         flash('Item sucessfully deleted!')
         return redirect(url_for('home'))
+
+@app.route('/categories.json')
+def categoriesJson():
+    categories = session.query(Category).all()
+    return jsonify(categories=[c.serialize for c in categories])
+
+@app.route('/items.json')
+def itemsJson():
+    items = session.query(Item).all()
+    return jsonify(items=[i.serialize for i in items])
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
