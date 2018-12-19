@@ -3,12 +3,14 @@
 <head>
     <link rel="shortcut icon" href="#">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block head %}
+    {% endblock %}
 </head>
 <body>
     <div class="header">
         <div class="headerContent">
             <h1 class="title">Catalog</h1>
-            <button class="button">login</button>
+            <button class="button" href="{{ url_for('login') }}">login</button>
         </div>
     </div>
     <div class="content">
