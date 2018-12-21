@@ -1,4 +1,4 @@
-from flask import (Flask, render_template, request, redirect, jsonify,
+from flask import (Flask, render_template, request, redirect, jsonify, Response,
     url_for, flash, make_response, session as login_session)
 
 from sqlalchemy import create_engine, desc
@@ -25,7 +25,9 @@ APPLICATION_NAME = "Catalog"
 def home():
     categories = session.query(Category).all()
     items = session.query(Item).order_by(desc(Item.created)).limit(10)
-    return render_template('home.html', categories=categories, items=items)
+    if 'username' not in login_session:
+        return render_template('public_home.html', categories=categories, items=items)
+    return render_template('private_home.html', categories=categories, items=items)
 
 @app.route('/login')
 def login():
@@ -174,6 +176,23 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+@app.route('/logout')
+def logout():
+    if 'provider' in login_session:
+        if login_session['provider'] == 'google':
+            gdisconnect()
+            del login_session['gplus_id']
+            del login_session['access_token']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        del login_session['user_id']
+        del login_session['provider']
+        flash("You have sucessfully logged out")
+        return redirect(url_for('home'))
+    else:
+        flash('You already were not logged in')
+        return redirect(url_for('home'))
 
 @app.route('/catalog/<string:category_name>/items')
 def showCategory(category_name):
@@ -189,8 +208,12 @@ def showCategory(category_name):
 
 @app.route('/catalog/<string:category_name>/<string:item_name>')
 def showItem(category_name, item_name):
-    item = session.query(Item).filter_by(category_name=category_name, name=item_name).one()
-    return render_template('item.html', item=item)
+    item = session.query(Item).filter_by(category_name=category_name, name=item_name).one()    
+    if 'username' not in login_session:
+        return render_template('public_item.html', item=item, logged=False)
+    elif login_session['user_id'] != item.user_id:
+        return render_template('public_item.html', item=item, logged=True)
+    return render_template('private_item.html', item=item)
 
 @app.route('/add', methods=['GET', 'POST'])
 def addItem():
@@ -202,7 +225,7 @@ def addItem():
             name=request.form['name'],
             description=request.form['description'],
             category_name=request.form['category_name'],
-            user_id=1
+            user_id=login_session['user_id']
         )
         session.add(newItem)
         session.commit()
