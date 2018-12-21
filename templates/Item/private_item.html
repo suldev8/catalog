@@ -1,5 +1,5 @@
-{% extends "item.html" %}
-{% include "private_header.html" %}
+{% extends "item/item.html" %}
+{% include "header/private_header.html" %}
 {% block editDelete %}
     <a class="list"
         href="{{ url_for('editItem', category_name=item.category_name, item_name=item.name) }}"

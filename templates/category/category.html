@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="listsContainer">
+    <div class="categories">
+        <h2>Categries</h2>
+        {% for category in categories %}
+            <a class="list" href="{{ url_for('showCategory', category_name=category.name) }}">{{category.name}}</a>
+        {% endfor %}
+    </div>
+    <div class="items">
+        <h2>{{ category_name }} Items ({{ numberOfItems }} items)</h2>
+        {% for item in items %}
+            <a class="list" href="{{ url_for('showItem', category_name=item.category_name, item_name=item.name) }}">
+                {{ item.name }}
+            </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

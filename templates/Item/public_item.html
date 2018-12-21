@@ -1,0 +1,6 @@
+{% extends "item/item.html" %}
+{% if logged %}
+    {% include "header/private_header.html" %}
+{% else %}
+    {% include "header/public_header.html" %}
+{% endif %}
