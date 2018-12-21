@@ -1,0 +1,15 @@
+{% extends "item.html" %}
+{% include "private_header.html" %}
+{% block editDelete %}
+    <a class="list"
+        href="{{ url_for('editItem', category_name=item.category_name, item_name=item.name) }}"
+    >
+        Edit
+    </a>
+    <a class="list" 
+        href="{{ url_for('deleteItem', category_name=item.category_name, item_name=item.name) }}" 
+        style="border-left: 1px solid grey;"
+    >
+        Delete
+    </a>
+{% endblock %}
