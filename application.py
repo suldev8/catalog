@@ -25,7 +25,7 @@ CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Catalog"
 
-
+#the home route is showing the categoris and latest 10 items
 @app.route('/')
 def home():
     categories = session.query(Category).all()
@@ -38,7 +38,7 @@ def home():
                            categories=categories,
                            items=items)
 
-
+#generate a state and show the login page
 @app.route('/login')
 def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
@@ -46,7 +46,7 @@ def login():
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
-
+#connect google account using OAuth2
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
@@ -157,8 +157,7 @@ def getUserID(email):
     except LookupError:
         return None
 
-# DISCONNECT - Revoke a current user's token and reset their login_session
-
+# Dissconnect google account- Revoke a current user's token and reset their login_session
 
 @app.route('/gdisconnect')
 def gdisconnect():
@@ -182,7 +181,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-
+#logout user and del all data from login_session
 @app.route('/logout')
 def logout():
     if 'provider' in login_session:
@@ -201,7 +200,7 @@ def logout():
         flash('You already were not logged in')
         return redirect(url_for('home'))
 
-
+#route to show the items of a specific category
 @app.route('/catalog/<string:category_name>/items')
 def showCategory(category_name):
     categories = session.query(Category).all()
@@ -223,7 +222,7 @@ def showCategory(category_name):
         category_name=category_name,
         numberOfItems=numberOfItems)
 
-
+#route to show the item description
 @app.route('/catalog/<string:category_name>/<string:item_name>')
 def showItem(category_name, item_name):
     item = session.query(Item).filter_by(
@@ -239,7 +238,7 @@ def showItem(category_name, item_name):
 
     return render_template('item/private_item.html', item=item)
 
-
+#route to add new item to a ctegory
 @app.route('/add', methods=['GET', 'POST'])
 def addItem():
     if request.method == 'GET':
@@ -258,7 +257,7 @@ def addItem():
         flash("New item sucessfully added!")
         return redirect(url_for('home'))
 
-
+#route to be able to edit an item if the user is the owner
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit',
            methods=['GET', 'POST'])
 def editItem(category_name, item_name):
@@ -287,7 +286,7 @@ def editItem(category_name, item_name):
         flash('Item sucessfully edited!')
         return redirect(url_for('home'))
 
-
+#route to be able to delete an item if the user is the owner
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete',
            methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
@@ -307,19 +306,19 @@ def deleteItem(category_name, item_name):
         flash('Item sucessfully deleted!')
         return redirect(url_for('home'))
 
-
+#JSON endpoint that returns all categories data and their related item
 @app.route('/catalog.json')
 def catalogJson():
     categories = session.query(Category).all()
     return jsonify(categories=[c.serialize for c in categories])
 
-
+#JSON endpoint that returns the items of a specific category
 @app.route('/categories/<string:category_name>.json')
 def categoriesJson(category_name):
     items = session.query(Item).filter_by(category_name=category_name).all()
     return jsonify(items=[i.serialize for i in items])
 
-
+#JSON endpoint that returns all items in the database
 @app.route('/items.json')
 def itemsJson():
     items = session.query(Item).all()
