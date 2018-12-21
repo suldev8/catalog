@@ -214,7 +214,6 @@ def showCategory(category_name):
             items=items,
             category_name=category_name,
             numberOfItems=numberOfItems)
-
     return render_template(
         'category/private_category.html',
         categories=categories,
@@ -243,7 +242,7 @@ def showItem(category_name, item_name):
 def addItem():
     if request.method == 'GET':
         categories = session.query(Category).all()
-        return render_template('cruds/addItem.html', categories=categories)
+        return render_template('cruds/add_item.html', categories=categories)
 
     if request.method == 'POST':
         newItem = Item(
@@ -270,7 +269,7 @@ def editItem(category_name, item_name):
         elif login_session['user_id'] != editItem.user_id:
             return abort(401)
         categories = session.query(Category).all()
-        return render_template('cruds/editItem.html',
+        return render_template('cruds/edit_item.html',
                                item=editItem,
                                categories=categories)
 
@@ -290,18 +289,18 @@ def editItem(category_name, item_name):
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete',
            methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
+    deleteItem = session.query(Item).filter_by(
+    category_name=category_name, name=item_name).one()
     if request.method == 'GET':
         if 'username' not in login_session:
             return redirect(url_for('login'))
-        elif login_session['user_id'] != editItem.user_id:
+        elif login_session['user_id'] != deleteItem.user_id:
             return abort(401)
-        return render_template('cruds/deleteItem.html',
+        return render_template('cruds/delete_item.html',
                                category_name=category_name,
                                item_name=item_name)
 
     if request.method == 'POST':
-        deleteItem = session.query(Item).filter_by(
-            category_name=category_name, name=item_name).one()
         session.delete(deleteItem)
         flash('Item sucessfully deleted!')
         return redirect(url_for('home'))
