@@ -3,7 +3,7 @@ body {
     margin: 0px;
     font-family: Arial, Helvetica, sans-serif;
 }
-a {
+.list {
     padding: 2px;
     text-align: center;
     font-size: 17px;
@@ -11,11 +11,11 @@ a {
 p {
     font-size: 19px;
 }
-a:link, a:visited {
+.list:link, .list:visited {
     color: #f86335;
     text-decoration: none;
 }
-a:hover, a:active {
+.list:hover, .list:active {
     text-decoration: underline;
 }
 
@@ -49,6 +49,18 @@ form {
     font-size: 40px;
     
 }
+.loginLogoutBtn:visited, .loginLogoutBtn:link {
+    color: white;
+    background-color: #f86335;
+    padding: 15px 25px;
+    margin: 25px 0px 25px 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+.loginLogoutBtn:hover, .loginLogoutBtn:active {
+    background-color: #e2582e;
+}
 .button {
     
     color: white;
@@ -75,7 +87,7 @@ form {
 .flash {
     text-align: center;
 }
-.lists {
+.listsContainer {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
