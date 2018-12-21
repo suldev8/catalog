@@ -1,4 +1,4 @@
-from flask import (Flask, render_template, request, redirect, jsonify, Response,
+from flask import (Flask, render_template, request, redirect, jsonify, abort,
     url_for, flash, make_response, session as login_session)
 
 from sqlalchemy import create_engine, desc
@@ -26,8 +26,8 @@ def home():
     categories = session.query(Category).all()
     items = session.query(Item).order_by(desc(Item.created)).limit(10)
     if 'username' not in login_session:
-        return render_template('public_home.html', categories=categories, items=items)
-    return render_template('private_home.html', categories=categories, items=items)
+        return render_template('home/public_home.html', categories=categories, items=items)
+    return render_template('home/private_home.html', categories=categories, items=items)
 
 @app.route('/login')
 def login():
@@ -117,16 +117,9 @@ def gconnect():
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
 
-    output = ''
-    output += '<h1>Welcome, '
-    output += login_session['username']
-    output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("you are now logged in as %s" % login_session['username'])
-    print ("done!")
-    return output
+    print ("Sucessfully logged in!")
+    return "Sucessful login"
 
 # User Helper Functions
 
@@ -199,8 +192,16 @@ def showCategory(category_name):
     categories = session.query(Category).all()
     items = session.query(Item).filter_by(category_name=category_name).all()
     numberOfItems = session.query(Item).filter_by(category_name=category_name).count()
+    if 'username' not in  login_session:
+        return render_template(
+            'category/public_category.html', 
+            categories=categories, 
+            items=items, 
+            category_name=category_name,
+            numberOfItems=numberOfItems)
+    
     return render_template(
-        'category.html', 
+        'category/private_category.html', 
         categories=categories, 
         items=items, 
         category_name=category_name,
@@ -209,17 +210,21 @@ def showCategory(category_name):
 @app.route('/catalog/<string:category_name>/<string:item_name>')
 def showItem(category_name, item_name):
     item = session.query(Item).filter_by(category_name=category_name, name=item_name).one()    
+    
     if 'username' not in login_session:
-        return render_template('public_item.html', item=item, logged=False)
-    elif login_session['user_id'] != item.user_id:
-        return render_template('public_item.html', item=item, logged=True)
-    return render_template('private_item.html', item=item)
+        return render_template('item/public_item.html', item=item, logged=False)
+    
+    if login_session['user_id'] != item.user_id:
+        return render_template('item/public_item.html', item=item, logged=True)
+    
+    return render_template('item/private_item.html', item=item)
 
 @app.route('/add', methods=['GET', 'POST'])
 def addItem():
     if request.method == 'GET':
         categories = session.query(Category).all()
-        return render_template('addItem.html', categories=categories)
+        return render_template('cruds/addItem.html', categories=categories)
+    
     if request.method == 'POST':
         newItem = Item(
             name=request.form['name'],
@@ -235,9 +240,15 @@ def addItem():
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit', methods=['GET', 'POST'])
 def editItem(category_name, item_name):
     editItem = session.query(Item).filter_by(category_name=category_name, name=item_name).one()
+    
     if request.method == 'GET':
+        if 'username' not in login_session:
+            return redirect(url_for('login'))
+        elif login_session['user_id'] != editItem.user_id:
+            return abort(401)
         categories = session.query(Category).all()
-        return render_template('editItem.html', item=editItem, categories=categories)
+        return render_template('cruds/editItem.html', item=editItem, categories=categories)
+    
     if request.method == 'POST':
         if request.form['name']:
             editItem.name = request.form['name']
@@ -253,17 +264,28 @@ def editItem(category_name, item_name):
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete', methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
     if request.method == 'GET':
-        return render_template('deleteItem.html', category_name=category_name, item_name=item_name)
+        if 'username' not in login_session:
+            return redirect(url_for('login'))
+        elif login_session['user_id'] != editItem.user_id:
+            return abort(401)
+        return render_template('cruds/deleteItem.html', category_name=category_name, item_name=item_name)
+    
     if request.method == 'POST':
         deleteItem = session.query(Item).filter_by(category_name=category_name, name=item_name).one()
         session.delete(deleteItem)
         flash('Item sucessfully deleted!')
         return redirect(url_for('home'))
 
-@app.route('/categories.json')
-def categoriesJson():
+@app.route('/catalog.json')
+def catalogJson():
     categories = session.query(Category).all()
     return jsonify(categories=[c.serialize for c in categories])
+
+@app.route('/categories/<string:category_name>.json')
+def categoriesJson(category_name):
+    items = session.query(Item).filter_by(category_name=category_name).all()
+    return jsonify(items=[i.serialize for i in items])
+
 
 @app.route('/items.json')
 def itemsJson():
