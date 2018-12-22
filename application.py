@@ -345,18 +345,19 @@ def catalogJson():
 # JSON endpoint that returns the items of a specific category
 
 
-@app.route('/categories/<string:category_name>.json')
+@app.route('/catalog/<string:category_name>.json')
 def categoriesJson(category_name):
     items = session.query(Item).filter_by(category_name=category_name).all()
     return jsonify(items=[i.serialize for i in items])
 
-# JSON endpoint that returns all items in the database
+# JSON endpoint that returns a specfic items of a specific category
 
 
-@app.route('/items.json')
-def itemsJson():
-    items = session.query(Item).all()
-    return jsonify(items=[i.serialize for i in items])
+@app.route('/catalog/<string:category_name>/<item_name>.json')
+def itemJson(category_name, item_name):
+    item = session.query(Item).filter_by(
+        category_name=category_name, name=item_name).one()
+    return jsonify(item=item.serialize)
 
 
 if __name__ == '__main__':
