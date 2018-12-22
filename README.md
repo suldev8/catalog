@@ -3,7 +3,7 @@
 Catalog is a web application that provides a list of items within a variety of categories as well as provides Google's OAuth 2.0 authentication system for user login. Registered users will have the ability to post, edit and delete their own items.
 
 ## Prerequisites
-This web app was built using Python 2.7.12
+This web app was built using Python 2.7.12 verson.
 
 ## Installation
 
@@ -18,7 +18,7 @@ For the first time running before we need to set up the database and put some da
 ```bash
 python seeder.py
 ``` 
-Then, to run the web server run this command. It will be running on [http://localhost:5000](http://localhost:5000)
+Then, to run the web server run this command. It will be running on [http://localhost:5000](http://localhost:5000) URL.
 ```bash
 python application.py
 ```
