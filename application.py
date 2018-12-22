@@ -160,7 +160,7 @@ def getUserID(email):
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
-    except LookupError:
+    except:
         return None
 
 # Dissconnect google account- Revoke a current user's token
