@@ -32,8 +32,8 @@ Endpoint to get all the categories and their items.
 
 Endpoint to get items of a specific category.
 
-> **[GET]** /categories/{category_name}
+> **[GET]** /categories/{category_name}.json
  
 Endpoint to get all items in the database.
 
->**[GET]** /items
+>**[GET]** /items.json
