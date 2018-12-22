@@ -1,3 +1,4 @@
+#!/usr/bin/python2
 from flask import (Flask, render_template, request, redirect, jsonify, abort,
                    url_for, flash, make_response, session as login_session)
 
