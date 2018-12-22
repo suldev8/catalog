@@ -3,7 +3,7 @@ from flask import (Flask, render_template, request, redirect, jsonify, abort,
 
 from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
-
+from sqlalchemy.orm.exc import NoResultFound
 from database_setup import Base, User, Category, Item
 
 import random
@@ -160,7 +160,7 @@ def getUserID(email):
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
-    except:
+    except NoResultFound:
         return None
 
 # Dissconnect google account- Revoke a current user's token
@@ -264,7 +264,7 @@ def addItem():
             session.query(Item).filter_by(name=request.form['name']).one()
             flash('Can not add this item, already added')
             return redirect(url_for('home'))
-        except:
+        except NoResultFound:
             newItem = Item(
                 name=request.form['name'],
                 description=request.form['description'],
@@ -300,7 +300,7 @@ def editItem(category_name, item_name):
             session.query(Item).filter_by(name=request.form['name']).one()
             flash('Can not edit this item\'s name, with the same other item')
             return redirect(url_for('home'))
-        except:
+        except NoResultFound:
             if request.form['name']:
                 editItem.name = request.form['name']
             if request.form['description']:
