@@ -260,16 +260,21 @@ def addItem():
         return render_template('cruds/add_item.html', categories=categories)
 
     if request.method == 'POST':
-        newItem = Item(
-            name=request.form['name'],
-            description=request.form['description'],
-            category_name=request.form['category_name'],
-            user_id=login_session['user_id']
-        )
-        session.add(newItem)
-        session.commit()
-        flash("New item sucessfully added!")
-        return redirect(url_for('home'))
+        try:
+            session.query(Item).filter_by(name=request.form['name']).one()
+            flash('Can not add this item, already added')
+            return redirect(url_for('home'))
+        except:
+            newItem = Item(
+                name=request.form['name'],
+                description=request.form['description'],
+                category_name=request.form['category_name'],
+                user_id=login_session['user_id']
+            )
+            session.add(newItem)
+            session.commit()
+            flash("New item sucessfully added!")
+            return redirect(url_for('home'))
 
 # route to be able to edit an item if the user is the owner
 
@@ -291,16 +296,21 @@ def editItem(category_name, item_name):
                                categories=categories)
 
     if request.method == 'POST':
-        if request.form['name']:
-            editItem.name = request.form['name']
-        if request.form['description']:
-            editItem.description = request.form['description']
-        if request.form['category_name']:
-            editItem.category_name = request.form['category_name']
-        session.add(editItem)
-        session.commit()
-        flash('Item sucessfully edited!')
-        return redirect(url_for('home'))
+        try:
+            session.query(Item).filter_by(name=request.form['name']).one()
+            flash('Can not edit this item\'s name, with the same other item')
+            return redirect(url_for('home'))
+        except:
+            if request.form['name']:
+                editItem.name = request.form['name']
+            if request.form['description']:
+                editItem.description = request.form['description']
+            if request.form['category_name']:
+                editItem.category_name = request.form['category_name']
+            session.add(editItem)
+            session.commit()
+            flash('Item sucessfully edited!')
+            return redirect(url_for('home'))
 
 # route to be able to delete an item if the user is the owner
 
