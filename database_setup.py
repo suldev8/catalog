@@ -24,6 +24,7 @@ class Category(Base):
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
     items = relationship("Item", backref="catergory")
+
     @property
     def serialize(self):
         items = [item.serialize for item in self.items]
