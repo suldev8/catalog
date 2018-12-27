@@ -257,6 +257,10 @@ def showItem(category_name, item_name):
 @app.route('/add', methods=['GET', 'POST'])
 def addItem():
     if request.method == 'GET':
+        if 'username' not in login_session:
+            return redirect(url_for('login'))
+        elif login_session['user_id'] != editItem.user_id:
+            return abort(401)
         categories = session.query(Category).all()
         return render_template('cruds/add_item.html', categories=categories)
 
