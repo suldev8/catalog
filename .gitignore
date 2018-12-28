@@ -3,3 +3,5 @@ database_setup.pyc
 .vscode/settings.json
 catalog.db-journal
 __pycache__/
+catenv/
+env/
