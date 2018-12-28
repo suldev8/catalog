@@ -15,7 +15,7 @@ import requests
 
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 
-engine = create_engine('postgresql:///catalog.db?check_same_thread=False')
+engine = create_engine('postgresql+psycopg2://suldev8:1212@localhost/catalog')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
